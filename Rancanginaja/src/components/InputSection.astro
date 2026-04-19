@@ -1,0 +1,186 @@
+---
+---
+<section class="glass-card input-section" id="inputSection">
+    <label class="input-section__label" for="ideaInput">
+        <span class="icon">💡</span>
+        Masukkan Ide Produk UMKM Anda
+    </label>
+    <div class="textarea-wrapper">
+        <textarea
+            id="ideaInput"
+            class="input-section__textarea"
+            placeholder="Contoh: Saya ingin membuat brand keripik singkong premium rasa truffle dengan kemasan mewah untuk pasar anak muda urban di Jakarta..."
+            maxlength="2000"
+            rows="5"
+        ></textarea>
+        <span class="char-count" id="charCount">0 / 2000</span>
+    </div>
+    <div class="input-section__actions">
+        <span class="input-section__hint">
+            ✨ Semakin detail ide Anda, semakin akurat strateginya
+        </span>
+        <button class="btn-generate" id="generateBtn">
+            <span class="btn-icon">🚀</span>
+            <span>Generate Strategi</span>
+        </button>
+    </div>
+</section>
+
+<style>
+    /* ========== INPUT SECTION ========== */
+    .input-section {
+        padding: 32px;
+        margin-top: 10px;
+        animation: fadeSlideUp 0.8s ease-out 0.3s both;
+    }
+
+    @keyframes fadeSlideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .input-section__label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 16px;
+    }
+
+    .input-section__label .icon {
+        font-size: 1.1rem;
+    }
+
+    .textarea-wrapper {
+        position: relative;
+    }
+
+    .input-section__textarea {
+        width: 100%;
+        min-height: 140px;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: var(--radius-md);
+        color: var(--text-primary);
+        font-family: 'Inter', sans-serif;
+        font-size: 1rem;
+        line-height: 1.7;
+        resize: vertical;
+        transition: var(--transition-base);
+        outline: none;
+    }
+
+    .input-section__textarea::placeholder {
+        color: var(--text-muted);
+    }
+
+    .input-section__textarea:focus {
+        border-color: var(--accent-purple);
+        box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15), inset 0 0 20px rgba(168, 85, 247, 0.05);
+    }
+
+    .char-count {
+        position: absolute;
+        bottom: 12px;
+        right: 16px;
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .input-section__actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 20px;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .input-section__hint {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* ========== GENERATE BUTTON ========== */
+    .btn-generate {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 36px;
+        background: var(--gradient-primary);
+        color: #fff;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border: none;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        overflow: hidden;
+        transition: var(--transition-base);
+        letter-spacing: 0.02em;
+    }
+
+    .btn-generate::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+        opacity: 0;
+        transition: var(--transition-base);
+    }
+
+    .btn-generate:hover::before {
+        opacity: 1;
+    }
+
+    .btn-generate:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(168, 85, 247, 0.4), 0 4px 15px rgba(236, 72, 153, 0.3);
+    }
+
+    .btn-generate:active {
+        transform: translateY(0) scale(0.98);
+    }
+
+    .btn-generate:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none !important;
+        box-shadow: none !important;
+    }
+
+    .btn-generate .btn-icon {
+        font-size: 1.2rem;
+        transition: transform 0.3s ease;
+    }
+
+    .btn-generate:hover .btn-icon {
+        transform: rotate(15deg) scale(1.1);
+    }
+
+    @media (max-width: 768px) {
+        .input-section {
+            padding: 20px;
+        }
+
+        .input-section__actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .btn-generate {
+            justify-content: center;
+            width: 100%;
+        }
+    }
+</style>

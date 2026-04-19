@@ -1,0 +1,450 @@
+---
+export const prerender = true;
+
+import MainLayout from '../layouts/MainLayout.astro';
+import Background from '../components/Background.astro';
+import Header from '../components/Header.astro';
+import InputSection from '../components/InputSection.astro';
+import Features from '../components/Features.astro';
+import OutputTabs from '../components/OutputTabs.astro';
+import Loading from '../components/UI/Loading.astro';
+import Toast from '../components/UI/Toast.astro';
+---
+
+<MainLayout>
+    <Background />
+    <Loading />
+    <Toast />
+    
+    <div class="app-wrapper">
+        <Header />
+        
+        <main>
+            <InputSection />
+            <Features />
+            <OutputTabs />
+        </main>
+    </div>
+</MainLayout>
+
+<script is:inline>
+    // ========== PARTICLES GENERATOR ==========
+    (function initParticles() {
+        const container = document.getElementById('particles');
+        if (!container) return;
+        const count = 20;
+        for (let i = 0; i < count; i++) {
+            const p = document.createElement('div');
+            p.classList.add('particle');
+            const size = Math.random() * 3 + 1;
+            const colors = ['rgba(168,85,247,0.5)', 'rgba(236,72,153,0.4)', 'rgba(34,211,238,0.3)', 'rgba(99,102,241,0.4)'];
+            p.style.cssText = `
+                width: ${size}px;
+                height: ${size}px;
+                left: ${Math.random() * 100}%;
+                background: ${colors[Math.floor(Math.random() * colors.length)]};
+                animation-duration: ${Math.random() * 15 + 10}s;
+                animation-delay: ${Math.random() * 10}s;
+            `;
+            container.appendChild(p);
+        }
+    })();
+
+    // ========== SCROLL TO TOP ==========
+    const scrollTopBtn = document.getElementById('scrollTopBtn');
+    if (scrollTopBtn) {
+        window.addEventListener('scroll', () => {
+            scrollTopBtn.classList.toggle('visible', window.scrollY > 400);
+        });
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    // ========== CHARACTER COUNT ==========
+    const ideaInput = document.getElementById('ideaInput');
+    const charCount = document.getElementById('charCount');
+    if (ideaInput && charCount) {
+        ideaInput.addEventListener('input', () => {
+            charCount.textContent = `${ideaInput.value.length} / 2000`;
+        });
+    }
+
+    // ========== TAB SWITCHING ==========
+    function switchTab(tabName) {
+        // Update buttons
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-selected', 'false');
+        });
+        const activeBtn = document.getElementById(`tab${capitalize(tabName)}`);
+        if (activeBtn) {
+            activeBtn.classList.add('active');
+            activeBtn.setAttribute('aria-selected', 'true');
+        }
+
+        // Update panels
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        const activePanel = document.getElementById(`panel${capitalize(tabName)}`);
+        if (activePanel) {
+            activePanel.classList.add('active');
+        }
+    }
+
+    // Add event listeners to tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tabName = btn.id.replace('tab', '').toLowerCase();
+            switchTab(tabName);
+        });
+    });
+
+    function capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    // ========== TOAST ==========
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        if (!toast) return;
+        const icon = type === 'success' ? '✅' : '❌';
+        toast.innerHTML = `${icon} ${message}`;
+        toast.className = `toast ${type} show`;
+        setTimeout(() => toast.classList.remove('show'), 3500);
+    }
+
+    // ========== LOADING ANIMATION ==========
+    let loadingInterval = null;
+    const loadingMessages = [
+        'Mengirim ide ke AI Engine...',
+        'Menyusun Business Model Canvas...',
+        'Merancang strategi IMC...',
+        'Membuat prompt visual kreatif...',
+        'Menyempurnakan output...'
+    ];
+
+    function startLoading() {
+        const overlay = document.getElementById('loadingOverlay');
+        if (!overlay) return;
+        overlay.classList.add('active');
+        let step = 0;
+        const dots = document.querySelectorAll('.loading-steps__dot');
+        const text = document.getElementById('loadingText');
+
+        dots.forEach(d => d.classList.remove('active'));
+        if (dots[0]) dots[0].classList.add('active');
+        if (text) text.textContent = loadingMessages[0];
+
+        loadingInterval = setInterval(() => {
+            step++;
+            if (step >= loadingMessages.length) step = 0;
+            if (text) text.textContent = loadingMessages[step];
+            dots.forEach(d => d.classList.remove('active'));
+            if (dots[step]) dots[step].classList.add('active');
+        }, 3000);
+    }
+
+    function stopLoading() {
+        if (loadingInterval) clearInterval(loadingInterval);
+        const overlay = document.getElementById('loadingOverlay');
+        if (overlay) overlay.classList.remove('active');
+    }
+
+    function parseMarkdown(md) {
+        let html = md;
+        html = html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const lines = html.split('\n');
+        let inTable = false;
+        let tableHtml = '';
+        let processedLines = [];
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (line.startsWith('|') && line.endsWith('|')) {
+                if (!inTable) {
+                    inTable = true;
+                    tableHtml = '<table><thead>';
+                    const cells = line.split('|').filter(c => c.trim() !== '');
+                    tableHtml += `<tr>${cells.map(c => `<th>${c.trim()}</th>`).join('')}</tr></thead><tbody>`;
+                    if (lines[i+1] && lines[i+1].includes('---')) i++;
+                } else {
+                    const cells = line.split('|').filter(c => c.trim() !== '');
+                    if (cells.length > 0) {
+                        tableHtml += `<tr>${cells.map(c => `<td>${c.trim()}</td>`).join('')}</tr>`;
+                    }
+                }
+            } else {
+                if (inTable) {
+                    inTable = false;
+                    tableHtml += '</tbody></table>';
+                    processedLines.push(tableHtml);
+                }
+                processedLines.push(lines[i]);
+            }
+        }
+        if (inTable) {
+            tableHtml += '</tbody></table>';
+            processedLines.push(tableHtml);
+        }
+        html = processedLines.join('\n');
+        html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => `<pre><code class="lang-${lang}">${code.trim()}</code></pre>`);
+        html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+        html = html.replace(/^#### (.+)$/gm, '<h4>$1</h4>');
+        html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+        html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+        html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+        html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+        html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+        html = html.replace(/^---$/gm, '<hr>');
+        html = html.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+        html = html.replace(/^[\-\*] (.+)$/gm, '<li>$1</li>');
+        html = html.replace(/(<li>.*<\/li>)/g, '<ul>$1</ul>'); 
+        html = html.replace(/\n\n+/g, '\n</p><p>\n');
+        html = html.replace(/&lt;br\s*\/?&gt;/gi, '<br>');
+        html = html.replace(/<td>([\s\S]*?)<\/td>/g, (match, content) => {
+            let cell = content;
+            if (cell.includes('1)') || cell.includes('2)') || cell.includes('3)')) {
+                cell = cell.replace(/(\d\)\s)/g, '<br><span style="color:var(--accent-pink); font-weight:800; margin-right:4px;">$1</span>');
+            }
+            cell = cell.replace(/<strong>([^<]+):<\/strong>/g, '<br><strong style="color:var(--accent-cyan);">$1:</strong>');
+            if (cell.startsWith('<br>')) cell = cell.substring(4);
+            return `<td>${cell}</td>`;
+        });
+        return html;
+    }
+
+    function splitContent(text) {
+        const sections = { bmc: '', imc: '', prompts: '', copy: '', brand: '', growth: '' };
+        const bmcMatch = text.match(/(?:^|\n)#+\s*1[.\s]*[\s\S]*?(?:BUSINESS\s*MODEL\s*CANVAS|BMC)([\s\S]*?)(?=\n#+\s*2[.\s]*|$)/i);
+        const imcMatch = text.match(/(?:^|\n)#+\s*2[.\s]*[\s\S]*?(?:IMC|INTEGRATED|MARKETING)([\s\S]*?)(?=\n#+\s*3[.\s]*|$)/i);
+        const promptsMatch = text.match(/(?:^|\n)#+\s*3[.\s]*[\s\S]*?(?:PROMPTS?|VISUAL|AI\s*IMAGE)([\s\S]*?)(?=\n#+\s*4[.\s]*|$)/i);
+        const copyMatch = text.match(/(?:^|\n)#+\s*4[.\s]*[\s\S]*?(?:COPYWRITING|TAGLINE|MESSAGING)([\s\S]*?)(?=\n#+\s*5[.\s]*|$)/i);
+        const brandMatch = text.match(/(?:^|\n)#+\s*5[.\s]*[\s\S]*?(?:POSITIONING|BRANDING|PERSONA)([\s\S]*?)(?=\n#+\s*6[.\s]*|$)/i);
+        const growthMatch = text.match(/(?:^|\n)#+\s*6[.\s]*[\s\S]*?(?:GROWTH|HACK|TAKTI[CK]S)([\s\S]*?)$/i);
+        if (bmcMatch) sections.bmc = bmcMatch[0].trim();
+        if (imcMatch) sections.imc = imcMatch[0].trim();
+        if (promptsMatch) sections.prompts = promptsMatch[0].trim();
+        if (copyMatch) sections.copy = copyMatch[0].trim();
+        if (brandMatch) sections.brand = brandMatch[0].trim();
+        if (growthMatch) sections.growth = growthMatch[0].trim();
+        if (!sections.bmc && !sections.imc && !sections.prompts && !sections.copy && !sections.brand && !sections.growth) {
+            sections.bmc = text;
+        }
+        return sections;
+    }
+
+    window.copyPrompt = function(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            showToast('Prompt berhasil disalin!', 'success');
+        }).catch(() => {
+            showToast('Gagal menyalin prompt', 'error');
+        });
+    }
+
+    function renderOutput(content) {
+        const sections = splitContent(content);
+        const outputSection = document.getElementById('outputSection');
+        const featuresSection = document.getElementById('featuresSection');
+        const renderPanel = (id, data, fallbackIcon, fallbackTitle) => {
+            const panel = document.getElementById(id);
+            if (!panel) return;
+            if (data) {
+                panel.innerHTML = `<div class="markdown-output">${parseMarkdown(data)}</div>`;
+            } else {
+                panel.innerHTML = `<div class="empty-state"><div class="empty-state__icon">${fallbackIcon}</div><p class="empty-state__title">Tidak ditemukan</p><p class="empty-state__text">Bagian ${fallbackTitle} tidak terdeteksi</p></div>`;
+            }
+        };
+        renderPanel('panelBmc', sections.bmc, '📊', 'BMC');
+        renderPanel('panelImc', sections.imc, '📣', 'IMC');
+        renderPanel('panelCopy', sections.copy, '✍️', 'Copywriting');
+        renderPanel('panelBrand', sections.brand, '🎯', 'Branding');
+        renderPanel('panelGrowth', sections.growth, '💡', 'Growth Hacks');
+        const promptsPanel = document.getElementById('panelPrompts');
+        if (promptsPanel) {
+            if (sections.prompts) {
+                let promptsHtml = `<div class="markdown-output">${parseMarkdown(sections.prompts)}</div>`;
+                const promptMatches = sections.prompts.match(/"[^"]+"/g) || sections.prompts.match(/`[^`]+`/g);
+                if (promptMatches) {
+                    promptsHtml += '<div style="margin-top:20px;">';
+                    promptMatches.forEach((prompt, i) => {
+                        const clean = prompt.replace(/^[""`]|[""`]$/g, '');
+                        promptsHtml += `
+                            <div class="prompt-card">
+                                <button class="copy-btn" onclick="copyPrompt(\`${clean.replace(/`/g, '\\`').replace(/\\/g, '\\\\')}\`)">📋 Copy</button>
+                                <p style="color:var(--accent-cyan);font-size:0.75rem;margin-bottom:4px;text-transform:uppercase;font-weight:700;">Prompt ${i + 1}</p>
+                                <p style="color:var(--text-primary);font-size:0.9rem;">${clean}</p>
+                            </div>`;
+                    });
+                    promptsHtml += '</div>';
+                }
+                promptsPanel.innerHTML = promptsHtml;
+            } else {
+                renderPanel('panelPrompts', null, '🎨', 'Visual Prompts');
+            }
+        }
+        if (featuresSection) featuresSection.style.display = 'none';
+        if (outputSection) {
+            outputSection.classList.add('visible');
+            switchTab('bmc');
+            setTimeout(() => outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+        }
+    }
+
+    // ========== API CALL ==========
+    async function generateStrategy() {
+        if (!ideaInput) return;
+        const idea = ideaInput.value.trim();
+        if (!idea) {
+            showToast('Silakan masukkan ide produk UMKM Anda terlebih dahulu', 'error');
+            ideaInput.focus();
+            return;
+        }
+        if (idea.length < 10) {
+            showToast('Deskripsi ide terlalu singkat. Tambahkan detail lebih banyak.', 'error');
+            ideaInput.focus();
+            return;
+        }
+        const generateBtn = document.getElementById('generateBtn');
+        if (generateBtn) generateBtn.disabled = true;
+        startLoading();
+        const systemPrompt = `Kamu adalah "The Mastermind", kombinasi dari Konsultan Bisnis Kelas Dunia, Chief Marketing Officer (CMO) berpengalaman, dan Elite Art Director Virtual. 
+
+TUGAS UTAMA: Mengubah ide produk UMKM menjadi cetak biru bisnis berskala korporat yang komprehensif, tajam, anti-klise, dan langsung bisa dieksekusi. Dilarang memberikan jawaban generik; setiap poin harus spesifik dengan niche produk yang diberikan pengguna.
+
+ATURAN BAHASA: Seluruh respons WAJIB menggunakan BAHASA INDONESIA yang profesional dan persuasif, KECUALI pada bagian "### 3. HIGH-FIDELITY AI IMAGE GENERATOR PROMPTS" yang harus tetap dalam Bahasa Inggris teknis agar dimengerti oleh AI Image Generator.
+
+Kembalikan responsmu HANYA menggunakan format Markdown dengan 6 bagian spesifik berikut, tanpa kalimat pembuka/penutup tambahan:
+
+### 1. EXHAUSTIVE BUSINESS MODEL CANVAS (BMC)
+Gunakan format TABEL MARKDOWN dengan 2 kolom: **[Blok BMC]** dan **[Strategi & Eksekusi Detail]**.
+Isi ke-9 blok (Customer Segments, Value Propositions, Channels, Customer Relationships, Revenue Streams, Key Resources, Key Activities, Key Partnerships, Cost Structure).
+*Aturan:* Jelaskan "Mengapa" dan "Bagaimana" eksekusinya dalam Bahasa Indonesia agar UMKM ini memiliki *competitive advantage* yang tidak adil (unfair advantage).
+
+### 2. INTEGRATED MARKETING COMMUNICATION (IMC) & FUNNEL
+Gunakan format TABEL MARKDOWN dengan 2 kolom: **[Fase/Saluran]** dan **[Taktik & Metrik Keberhasilan]**.
+Rancang strategi (dalam Bahasa Indonesia) menggunakan alur funnel AIDA (Attention, Interest, Desire, Action) yang dikombinasikan dengan saluran marketing:
+- **Social Media (Organic):** Tentukan pilar konten dan format spesifik.
+- **Paid Ads:** Tentukan target audiens spesifik, *angle* iklan, dan platform.
+- **KOL/Influencer:** Kriteria spesifik *influencer* dan bentuk kerja samanya.
+
+### 3. HIGH-FIDELITY AI IMAGE GENERATOR PROMPTS
+Buatkan 3 prompt gambar berbahasa Inggris (Midjourney/DALL-E) yang *sangat teknis*. 
+*Aturan:* Setiap prompt HARUS mengandung detail subjek, lingkungan, lighting, spesifikasi kamera, and aesthetic tags.
+1. **Product Focus:** [Prompt teknis bahasa Inggris]
+2. **Lifestyle/In-Use:** [Prompt teknis bahasa Inggris]
+3. **Creative/Surreal Campaign:** [Prompt teknis bahasa Inggris]
+
+### 4. HYPNOTIC COPYWRITING & MESSAGING
+Buat rangkaian *copywriting* dalam Bahasa Indonesia yang menggunakan pemicu psikologis (FOMO, eksklusivitas, atau penyelesaian masalah):
+- **5 Variasi Tagline:** Harus *punchy*, mudah ingat, maksimal 5 kata per tagline.
+- **1 Hook Caption Social Media:** Kalimat pembuka yang membuat orang berhenti *scroll* dalam 3 detik pertama.
+- **1 Body Copy & Call to Action (CTA):** Teks lanjutan yang persuasif dan ajakan bertindak yang jelas.
+
+### 5. BRAND POSITIONING & PERSONA
+Semua bagian ini wajib dalam Bahasa Indonesia:
+- **Positioning Statement:** Format: "Untuk [Target Market] yang [Kebutuhan], [Nama Brand/Produk] adalah [Kategori] yang [Benefit Utama/USP], karena [Bukti/Reason to Believe]."
+- **Brand Voice & Archetype:** Deskripsikan kepribadian brand dan gaya bahasanya.
+
+### 6. AGGRESSIVE GROWTH HACK TAKTICS
+Berikan 3 taktik *growth hacking* praktis (dalam Bahasa Indonesia) dengan biaya akuisisi rendah namun berpotensi viral. Fokus pada kemitraan silang, program referral kreatif, atau *guerilla marketing*.`;
+        
+        try {
+            const response = await fetch('/api/generate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    model: 'openai/gpt-oss-120b:free',
+                    messages: [
+                        { role: 'system', content: systemPrompt },
+                        { role: 'user', content: `Ide Produk UMKM saya: ${idea}` }
+                    ],
+                    max_tokens: 4000,
+                    temperature: 0.7
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.error?.message || `API Error: ${response.status} ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            const content = data.choices?.[0]?.message?.content;
+            if (!content) throw new Error('Respons API kosong. Silakan coba lagi.');
+            stopLoading();
+            renderOutput(content);
+            showToast('Strategi berhasil di-generate! 🎉', 'success');
+        } catch (error) {
+            stopLoading();
+            console.error('API Error:', error);
+            const outputSection = document.getElementById('outputSection');
+            if (outputSection) outputSection.classList.add('visible');
+            const panelBmc = document.getElementById('panelBmc');
+            if (panelBmc) {
+                panelBmc.innerHTML = `
+                    <div class="error-message">
+                        <div class="error-message__icon">⚠️</div>
+                        <p class="error-message__title">Gagal Generate Strategi</p>
+                        <p class="error-message__text">${error.message}</p>
+                        <button class="btn-generate" style="margin-top:20px;" onclick="window.location.reload()">
+                            <span class="btn-icon">🔄</span>
+                            <span>Muat Ulang Halaman</span>
+                        </button>
+                    </div>
+                `;
+            }
+            switchTab('bmc');
+            showToast('Terjadi kesalahan. Silakan coba lagi.', 'error');
+        } finally {
+            if (generateBtn) generateBtn.disabled = false;
+        }
+    }
+
+    // Add event listener to generate button
+    const generateBtn = document.getElementById('generateBtn');
+    if (generateBtn) {
+        generateBtn.addEventListener('click', generateStrategy);
+    }
+
+    // ========== KEYBOARD SHORTCUT ==========
+    if (ideaInput) {
+        ideaInput.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                generateStrategy();
+            }
+        });
+    }
+</script>
+
+<style>
+    main {
+        flex: 1;
+    }
+    
+    :global(.error-message) {
+        text-align: center;
+        padding: 40px;
+    }
+
+    :global(.error-message__icon) {
+        font-size: 2.5rem;
+        margin-bottom: 16px;
+    }
+
+    :global(.error-message__title) {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+    }
+
+    :global(.error-message__text) {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        max-width: 400px;
+        margin: 0 auto;
+    }
+</style>

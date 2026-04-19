@@ -1,0 +1,93 @@
+---
+---
+<div class="features" id="featuresSection">
+    <div class="glass-card feature-card">
+        <span class="feature-card__icon">📊</span>
+        <h3 class="feature-card__title">Business Model Canvas</h3>
+        <p class="feature-card__desc">9 elemen BMC lengkap: value proposition, customer segments, revenue streams, dan semua komponen vital bisnis kamu.</p>
+    </div>
+    <div class="glass-card feature-card">
+        <span class="feature-card__icon">📣</span>
+        <h3 class="feature-card__title">Strategi IMC</h3>
+        <p class="feature-card__desc">Integrated Marketing Communication mencakup content plan, platform prioritas, tone of voice, dan kalender konten mingguan.</p>
+    </div>
+    <div class="glass-card feature-card">
+        <span class="feature-card__icon">🎨</span>
+        <h3 class="feature-card__title">Visual Prompt AI</h3>
+        <p class="feature-card__desc">Prompt foto produk ultra-teknis: spesifikasi lensa (35mm f/1.4), lighting setup, angle kamera, mood warna — tinggal copy ke Midjourney atau DALL-E.</p>
+    </div>
+    <div class="glass-card feature-card">
+        <span class="feature-card__icon">✍️</span>
+        <h3 class="feature-card__title">Tagline & Copywriting</h3>
+        <p class="feature-card__desc">5 variasi tagline bertenaga, hook caption Instagram, dan script iklan 15 detik siap pakai untuk Reels dan TikTok.</p>
+    </div>
+    <div class="glass-card feature-card">
+        <span class="feature-card__icon">🎯</span>
+        <h3 class="feature-card__title">Positioning & Branding</h3>
+        <p class="feature-card__desc">Panduan brand voice, positioning statement, dan unique selling proposition yang membedakan kamu dari kompetitor.</p>
+    </div>
+    <div class="glass-card feature-card">
+        <span class="feature-card__icon">💡</span>
+        <h3 class="feature-card__title">Growth Hack Tips</h3>
+        <p class="feature-card__desc">Taktik pertumbuhan low-cost high-impact yang bisa langsung dieksekusi besok oleh bisnis kecil sekalipun.</p>
+    </div>
+</div>
+
+<style>
+    /* ========== FEATURES SECTION ========== */
+    .features {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-top: 32px;
+        animation: fadeSlideUp 0.8s ease-out 0.5s both;
+    }
+
+    .feature-card {
+        padding: 28px 24px;
+        text-align: left;
+        transition: var(--transition-base);
+        background: rgba(14, 10, 24, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        background: rgba(22, 16, 36, 0.6);
+        border-color: rgba(168, 85, 247, 0.3);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .feature-card__icon {
+        font-size: 2rem;
+        margin-bottom: 12px;
+        display: block;
+    }
+
+    .feature-card__title {
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+        color: var(--text-primary);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+
+    .feature-card__desc {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        line-height: 1.5;
+    }
+
+    @keyframes fadeSlideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+        .features {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+    }
+</style>

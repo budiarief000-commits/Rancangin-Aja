@@ -1,0 +1,105 @@
+---
+---
+<header class="header">
+    <div class="header__badge">
+        <span class="dot"></span>
+        Powered by AI
+    </div>
+    <h1 class="header__logo">
+        Jadikan UMKM-mu 
+        <span class="gradient-text">Sekelas Korporat</span>
+    </h1>
+    <p class="header__tagline">
+        Masukkan ide produkmu. Kami otomatis buatkan Business Model Canvas, strategi IMC, hingga prompt gambar AI yang super teknis tanpa perlu keahlian marketing atau desain.
+    </p>
+</header>
+
+<style>
+    /* ========== HEADER ========== */
+    .header {
+        text-align: center;
+        padding: 40px 20px 30px;
+        position: relative;
+    }
+
+    .header__badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 16px;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 100px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--accent-cyan);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        animation: fadeSlideDown 0.8s ease-out;
+    }
+
+    .header__badge .dot {
+        width: 6px;
+        height: 6px;
+        background: var(--accent-cyan);
+        border-radius: 50%;
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .header__logo {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: clamp(2.5rem, 6vw, 4.5rem);
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: -0.05em;
+        line-height: 0.95;
+        margin-bottom: 0.2em;
+        animation: fadeSlideDown 0.8s ease-out 0.1s both;
+        position: relative;
+        text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .gradient-text {
+        background: linear-gradient(90deg, #a855f7 0%, #ec4899 50%, #f97316 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: block;
+        filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.3));
+    }
+
+    .header__tagline {
+        margin: 20px auto 0;
+        font-size: clamp(0.9rem, 2vw, 1.1rem);
+        color: var(--text-secondary);
+        font-weight: 400;
+        letter-spacing: 0.01em;
+        max-width: 700px;
+        line-height: 1.6;
+        animation: fadeSlideDown 0.8s ease-out 0.2s both;
+    }
+
+    .header__tagline strong {
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+
+    @keyframes fadeSlideDown {
+        from { opacity: 0; transform: translateY(-15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+        .header {
+            padding: 30px 16px 20px;
+        }
+    }
+</style>

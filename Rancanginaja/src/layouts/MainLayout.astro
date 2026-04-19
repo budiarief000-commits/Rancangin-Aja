@@ -1,0 +1,166 @@
+---
+interface Props {
+	title?: string;
+}
+
+const { title = "RancanginAja — Generator Strategi & Visual Prompt Engine" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="RancanginAja - Generator Strategi Bisnis & Visual Prompt Engine untuk UMKM Indonesia. Dapatkan Business Model Canvas, strategi IMC, dan AI image prompts secara instan.">
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style is:global>
+        /* ========== CSS RESET & BASE ========== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-hover: rgba(255, 255, 255, 0.12);
+            --text-primary: #f8fafc;
+            --text-secondary: rgba(226, 232, 240, 0.8);
+            --text-muted: rgba(148, 163, 184, 0.6);
+            --accent-purple: #a855f7;
+            --accent-pink: #ec4899;
+            --accent-blue: #6366f1;
+            --accent-cyan: #22d3ee;
+            --gradient-primary: linear-gradient(135deg, #a855f7, #ec4899, #6366f1);
+            --gradient-glow: linear-gradient(135deg, rgba(168,85,247,0.4), rgba(236,72,153,0.4));
+            --radius-sm: 12px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            --shadow-glow: 0 0 40px rgba(168, 85, 247, 0.15), 0 0 80px rgba(236, 72, 153, 0.08);
+            --transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-spring: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0118;
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* ========== GLASS CARD COMPONENT ========== */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(1.2);
+            -webkit-backdrop-filter: blur(20px) saturate(1.2);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-glow);
+            transition: var(--transition-base);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 0 50px rgba(168, 85, 247, 0.2), 0 0 100px rgba(236, 72, 153, 0.1);
+        }
+
+        .app-wrapper {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: auto;
+        }
+
+        .footer__text {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+
+        .footer__text a {
+            color: var(--accent-purple);
+            text-decoration: none;
+        }
+
+        /* ========== SCROLL TO TOP ========== */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            z-index: 900;
+            width: 44px;
+            height: 44px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: var(--transition-spring);
+            pointer-events: none;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        .scroll-top:hover {
+            background: var(--accent-purple);
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .app-wrapper {
+                padding: 12px;
+            }
+            .footer {
+                padding: 20px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <slot />
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="footer__text">
+            © 2026 <strong>RancanginAja</strong> — Ditenagai oleh AI untuk UMKM Indonesia 🇮🇩
+        </p>
+    </footer>
+
+    <!-- Scroll to Top -->
+    <button class="scroll-top" id="scrollTopBtn" aria-label="Scroll ke atas">↑</button>
+</body>
+</html>
